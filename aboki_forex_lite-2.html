@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Aboki Forex</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+
+/* ══════════════════════════════
+   THEME VARIABLES
+══════════════════════════════ */
+:root{
+  --green:#4CAF50;
+  --green2:#388e3c;
+  --orange:#FF9800;
+  /* NIGHT (default) */
+  --bg:#1a1a1a;
+  --bg2:#111111;
+  --card:#2d2d2d;
+  --card2:#242424;
+  --tabbar:#1e1e1e;
+  --border:#333333;
+  --line:#484848;
+  --muted:#888888;
+  --text:#ffffff;
+  --text2:#e0e0e0;
+  --text3:#aaaaaa;
+  --modal-bg:#2a2a2a;
+  --input-bg:#1e1e1e;
+  --pin-key:#3a3a3a;
+  --topbar-text:#ffffff;
+  --theme-icon:☀️;
+}
+
+/* DAY MODE */
+body.day{
+  --bg:#f0f2f5;
+  --bg2:#e8eaed;
+  --card:#ffffff;
+  --card2:#f5f5f5;
+  --tabbar:#ffffff;
+  --border:#dddddd;
+  --line:#cccccc;
+  --muted:#777777;
+  --text:#1a1a1a;
+  --text2:#333333;
+  --text3:#666666;
+  --modal-bg:#ffffff;
+  --input-bg:#f5f5f5;
+  --pin-key:#eeeeee;
+  --topbar-text:#ffffff;
+}
+
+html,body{height:100%}
+body{
+  font-family:'Roboto',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  max-width:480px;
+  margin:0 auto;
+  min-height:100vh;
+  overflow-x:hidden;
+  transition:background .3s,color .3s;
+}
+
+/* ══════════════════════════════
+   TOPBAR
+══════════════════════════════ */
+#topbar{
+  background:var(--green);
+  height:56px;
+  display:flex;
+  align-items:center;
+  padding:0 4px 0 10px;
+  position:sticky;
+  top:0;
+  z-index:500;
+  gap:2px;
+  transition:background .3s;
+}
+.tb-ham{display:flex;flex-direction:column;gap:5px;padding:8px 10px;cursor:pointer;flex-shrink:0}
+.tb-ham span{display:block;width:22px;height:2px;background:#fff;border-radius:2px}
+#tb-title{flex:1;font-size:19px;font-weight:500;color:#fff;padding-left:2px;user-select:none}
+.tb-icon{
+  width:42px;height:42px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:#fff;font-size:18px;flex-shrink:0;user-select:none;
+  transition:background .15s;
+}
+.tb-icon:active{background:rgba(255,255,255,.25)}
+
+/* Theme toggle pill */
+#theme-toggle{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.2);
+  border-radius:20px;
+  padding:5px 10px 5px 8px;
+  cursor:pointer;
+  margin-right:4px;
+  transition:background .15s;
+  border:none;
+  color:#fff;
+  font-family:'Roboto',sans-serif;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.3px;
+  flex-shrink:0;
+}
+#theme-toggle:active{background:rgba(255,255,255,.35)}
+#theme-icon-em{font-size:15px;line-height:1}
+#theme-label{display:none}
+
+/* ══════════════════════════════
+   TAB BAR
+══════════════════════════════ */
+#tab-bar{
+  background:var(--tabbar);
+  display:flex;
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:56px;
+  z-index:499;
+  overflow-x:auto;
+  scrollbar-width:none;
+  transition:background .3s,border-color .3s;
+}
+#tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{
+  flex:1;
+  height:46px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10.5px;font-weight:700;letter-spacing:.5px;
+  text-transform:uppercase;color:var(--muted);cursor:pointer;
+  border-bottom:3px solid transparent;white-space:nowrap;
+  transition:color .2s,border-color .2s;user-select:none;
+  padding:0 10px;
+}
+.tab-btn.active{color:var(--green);border-bottom-color:var(--green)}
+
+/* ══════════════════════════════
+   SLIDE TRACK (3 panels = 300%)
+══════════════════════════════ */
+#slider-track{
+  display:flex;
+  width:300%;
+  transition:transform .35s cubic-bezier(.4,0,.2,1);
+  will-change:transform;
+}
+.slide{
+  width:33.3333%;
+  flex-shrink:0;
+  min-height:calc(100vh - 102px);
+  overflow-y:auto;
+}
+
+/* ══════════════════════════════
+   TIMESTAMP
+══════════════════════════════ */
+.ts-bar{
+  text-align:center;font-size:12.5px;
+  color:var(--green);font-style:italic;
+  padding:10px 0 6px;background:var(--bg);
+  transition:background .3s;
+}
+
+/* ══════════════════════════════
+   RATE LIST
+══════════════════════════════ */
+.rate-list{padding:5px 8px 110px;display:flex;flex-direction:column;gap:6px}
+
+/* Parallel card */
+.rate-card{
+  background:var(--card);
+  border-radius:10px;
+  display:flex;align-items:stretch;
+  overflow:hidden;
+  animation:up .28s ease both;
+  transition:background .3s;
+  box-shadow:0 1px 3px rgba(0,0,0,.08);
+}
+.rc-left{
+  flex:1;padding:13px 0 13px 14px;
+  display:flex;flex-direction:column;justify-content:center;
+  gap:5px;min-width:0;
+}
+.rc-flag{font-size:38px;line-height:1}
+.rc-name{font-size:13.5px;font-weight:700;color:var(--green);text-transform:uppercase;white-space:nowrap}
+.rc-divider{width:1px;background:var(--line);margin:10px 0;flex-shrink:0;transition:background .3s}
+.rc-right{
+  padding:11px 14px 11px 16px;
+  display:flex;flex-direction:column;justify-content:center;
+  gap:8px;min-width:168px;
+}
+.rc-row{display:flex;align-items:center}
+.rc-label{font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.4px;width:32px;flex-shrink:0}
+.rc-sep{flex:1;height:1px;background:var(--line);margin:0 8px;transition:background .3s}
+.rc-val{font-size:16px;font-weight:700;white-space:nowrap}
+.rc-val.buy{color:var(--green)}.rc-val.sell{color:var(--orange)}
+
+/* CBN card */
+.cbn-card{
+  background:var(--card);border-radius:10px;
+  display:flex;align-items:center;
+  padding:14px 16px;gap:14px;
+  animation:up .28s ease both;min-height:64px;
+  transition:background .3s;
+  box-shadow:0 1px 3px rgba(0,0,0,.08);
+}
+.cbn-flag{font-size:36px;flex-shrink:0}
+.cbn-name{flex:1;font-size:13.5px;font-weight:700;color:var(--green);text-transform:uppercase}
+.cbn-rate{font-size:16px;font-weight:700;color:var(--green);white-space:nowrap}
+
+/* News card */
+.news-list{padding:5px 8px 110px;display:flex;flex-direction:column;gap:6px}
+.news-card{
+  background:var(--card);border-radius:10px;
+  border-left:4px solid var(--green);
+  padding:14px 14px 12px;
+  animation:up .28s ease both;cursor:pointer;
+  transition:background .3s,opacity .15s;
+  box-shadow:0 1px 3px rgba(0,0,0,.08);
+}
+.news-card:active{opacity:.75}
+.news-title{font-size:14.5px;font-weight:500;color:var(--text2);line-height:1.45;margin-bottom:10px}
+.news-meta{display:flex;align-items:center;justify-content:space-between}
+.news-source{font-size:11px;font-weight:700;color:var(--orange);letter-spacing:.3px}
+.news-ago{font-size:11.5px;color:var(--green)}
+
+/* ══════════════════════════════
+   FAB
+══════════════════════════════ */
+#fab{
+  position:fixed;bottom:24px;right:16px;
+  width:54px;height:54px;background:#26a69a;
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:26px;cursor:pointer;
+  box-shadow:0 4px 18px rgba(0,0,0,.45);
+  z-index:400;transition:transform .15s;user-select:none;
+}
+#fab:active{transform:scale(.88)}
+#fab.hidden{display:none}
+
+/* ══════════════════════════════
+   OVERLAYS
+══════════════════════════════ */
+.overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.72);z-index:600;
+  align-items:center;justify-content:center;padding:20px;
+}
+.overlay.open{display:flex}
+.modal-box{
+  background:var(--modal-bg);border-radius:16px;
+  padding:24px 20px 20px;width:100%;max-width:340px;
+  animation:pop .2s ease;max-height:90vh;overflow-y:auto;
+  box-shadow:0 8px 32px rgba(0,0,0,.4);
+  transition:background .3s;
+}
+.modal-title{font-size:16px;font-weight:700;color:var(--green);text-align:center;margin-bottom:18px}
+
+/* PIN */
+.pin-dots{display:flex;gap:14px;justify-content:center;margin-bottom:8px}
+.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--green);background:transparent;transition:background .12s}
+.pin-dot.filled{background:var(--green)}
+#pin-error{text-align:center;color:#ef5350;font-size:12px;min-height:20px;margin-bottom:10px}
+.pin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:14px}
+.pin-key{
+  background:var(--pin-key);border:none;border-radius:10px;
+  height:54px;font-size:20px;font-weight:600;
+  color:var(--text);cursor:pointer;font-family:'Roboto',sans-serif;transition:background .1s;
+}
+.pin-key:active{background:var(--line)}
+.pin-key.k-del{color:var(--orange);font-size:16px}
+.pin-key.k-blank{background:transparent;pointer-events:none;visibility:hidden}
+
+/* CALC */
+.calc-screen{
+  background:var(--bg2);border-radius:10px;padding:14px;text-align:right;
+  margin-bottom:14px;min-height:70px;display:flex;flex-direction:column;justify-content:flex-end;
+  transition:background .3s;
+}
+.calc-expr{font-size:12px;color:var(--muted);min-height:16px;word-break:break-all}
+.calc-num{font-size:32px;font-weight:700;color:var(--text);word-break:break-all;line-height:1.2}
+.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.ck{
+  background:var(--pin-key);border:none;border-radius:10px;height:54px;
+  font-size:18px;font-weight:600;color:var(--text);cursor:pointer;
+  font-family:'Roboto',sans-serif;transition:background .1s;
+}
+.ck:active{background:var(--line)}
+.ck.op{color:var(--orange)}
+.ck.fn{color:var(--text3);background:var(--card2)}
+.ck.fn:active{background:var(--line)}
+.ck.eq{background:var(--green);color:#fff}
+.ck.eq:active{background:var(--green2)}
+.ck.w2{grid-column:span 2}
+
+/* Close button */
+.btn-close{
+  width:100%;background:transparent;border:1px solid var(--border);
+  border-radius:10px;color:var(--muted);padding:12px;
+  font-size:14px;font-family:'Roboto',sans-serif;cursor:pointer;transition:background .1s;
+}
+.btn-close:active{background:var(--card2)}
+
+/* ══════════════════════════════
+   ADMIN SCREEN
+══════════════════════════════ */
+#admin-screen{
+  display:none;position:fixed;inset:0;
+  background:var(--bg);z-index:700;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+  transition:background .3s;
+}
+#admin-screen.open{display:block}
+#admin-topbar{
+  background:var(--green);height:56px;
+  display:flex;align-items:center;padding:0 14px;gap:12px;
+  position:sticky;top:0;z-index:10;
+}
+#admin-back{color:#fff;font-size:26px;cursor:pointer;line-height:1;padding:4px 6px 4px 0}
+#admin-topbar-title{color:#fff;font-size:17px;font-weight:700;flex:1}
+
+#admin-tabs{
+  display:flex;background:var(--tabbar);
+  border-bottom:1px solid var(--border);
+  overflow-x:auto;scrollbar-width:none;
+  transition:background .3s;
+}
+#admin-tabs::-webkit-scrollbar{display:none}
+.admin-tab{
+  flex:1;height:42px;display:flex;align-items:center;justify-content:center;
+  font-size:10.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;
+  white-space:nowrap;padding:0 10px;transition:color .2s;
+}
+.admin-tab.active{color:var(--orange);border-bottom-color:var(--orange)}
+
+.admin-section{display:none;padding:8px 8px 130px}
+.admin-section.active{display:block}
+
+.admin-card{
+  background:var(--card);border-radius:10px;padding:14px;
+  margin-bottom:8px;animation:up .25s ease both;
+  box-shadow:0 1px 3px rgba(0,0,0,.06);
+  transition:background .3s;
+}
+.admin-card-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.admin-flag-in{
+  background:transparent;border:none;outline:none;
+  font-size:28px;width:44px;cursor:text;color:var(--text);
+  font-family:'Roboto',sans-serif;
+}
+.admin-name-in{
+  background:transparent;border:none;border-bottom:1px solid var(--line);
+  outline:none;color:var(--green);font-size:13px;font-weight:700;
+  text-transform:uppercase;font-family:'Roboto',sans-serif;
+  width:100%;flex:1;padding-bottom:2px;
+}
+.admin-inputs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.inp-group label{
+  display:block;font-size:10px;font-weight:700;
+  letter-spacing:.5px;text-transform:uppercase;margin-bottom:5px;
+}
+.lbl-buy{color:var(--green)}.lbl-sell{color:var(--orange)}.lbl-cbn{color:var(--green)}
+.inp-group input,.inp-group textarea{
+  width:100%;background:var(--input-bg);border:1.5px solid var(--border);
+  border-radius:8px;padding:9px 10px;color:var(--text);
+  font-size:14px;font-weight:600;outline:none;
+  font-family:'Roboto',sans-serif;transition:border-color .15s,background .3s;
+  -webkit-appearance:none;
+}
+.inp-group input:focus{border-color:var(--green)}
+.inp-group input.sell-in:focus{border-color:var(--orange)}
+.inp-group textarea{resize:none;height:68px;font-size:13px;font-weight:400;line-height:1.4}
+.inp-group textarea:focus{border-color:var(--green)}
+.inp-full{grid-column:span 2}
+
+/* Theme toggle card in admin */
+.theme-card{
+  background:var(--card);border-radius:10px;padding:16px;
+  margin-bottom:8px;display:flex;align-items:center;gap:14px;
+  box-shadow:0 1px 3px rgba(0,0,0,.06);transition:background .3s;
+}
+.theme-card-icon{font-size:28px}
+.theme-card-info{flex:1}
+.theme-card-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px}
+.theme-card-sub{font-size:12px;color:var(--muted)}
+/* Toggle switch */
+.tog-wrap{flex-shrink:0}
+.tog{position:relative;width:52px;height:28px;cursor:pointer}
+.tog input{opacity:0;width:0;height:0;position:absolute}
+.tog-slider{
+  position:absolute;inset:0;border-radius:28px;
+  background:#555;transition:background .3s;
+}
+.tog-slider::before{
+  content:'';position:absolute;width:22px;height:22px;
+  left:3px;top:3px;border-radius:50%;background:#fff;
+  transition:transform .3s;box-shadow:0 1px 4px rgba(0,0,0,.3);
+}
+.tog input:checked + .tog-slider{background:var(--green)}
+.tog input:checked + .tog-slider::before{transform:translateX(24px)}
+
+/* Save bar */
+#admin-save-bar{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:480px;
+  padding:10px 14px 16px;background:var(--tabbar);
+  border-top:1px solid var(--border);z-index:20;
+  transition:background .3s;
+}
+#admin-save-btn{
+  width:100%;background:var(--green);border:none;border-radius:10px;
+  color:#fff;font-size:15px;font-weight:700;padding:14px;cursor:pointer;
+  font-family:'Roboto',sans-serif;transition:background .15s;
+}
+#admin-save-btn:active{background:var(--green2)}
+
+/* Settings rows */
+.settings-row{
+  display:flex;align-items:center;gap:12px;
+  background:var(--card);border-radius:10px;padding:14px 16px;
+  margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.06);
+  transition:background .3s;
+}
+.settings-icon{font-size:22px}
+.settings-info{flex:1}
+.settings-title{font-size:14px;font-weight:700;color:var(--text)}
+.settings-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.settings-action button{
+  background:var(--input-bg);border:1.5px solid var(--border);
+  border-radius:8px;padding:8px 14px;color:var(--text);
+  font-size:13px;font-weight:600;cursor:pointer;font-family:'Roboto',sans-serif;
+}
+.pin-change-inputs{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.pin-change-inputs input{
+  background:var(--input-bg);border:1.5px solid var(--border);
+  border-radius:8px;padding:10px 12px;color:var(--text);
+  font-size:14px;font-weight:600;outline:none;
+  font-family:'Roboto',sans-serif;width:100%;transition:border-color .15s;
+  letter-spacing:4px;
+}
+.pin-change-inputs input:focus{border-color:var(--green)}
+#pin-change-msg{font-size:12px;text-align:center;min-height:18px;margin-top:6px}
+
+/* ══════════════════════════════
+   TOAST
+══════════════════════════════ */
+#toast{
+  position:fixed;bottom:90px;left:50%;
+  transform:translateX(-50%) translateY(14px);
+  background:#1b5e20;color:#fff;padding:9px 22px;
+  border-radius:24px;font-size:13px;font-weight:600;
+  opacity:0;pointer-events:none;z-index:999;
+  transition:opacity .25s,transform .25s;white-space:nowrap;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ══════════════════════════════
+   ANIMATIONS + STAGGER
+══════════════════════════════ */
+@keyframes up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pop{from{opacity:0;transform:scale(.86)}to{opacity:1;transform:scale(1)}}
+
+.rate-card:nth-child(1),.cbn-card:nth-child(1),.news-card:nth-child(1),.admin-card:nth-child(1){animation-delay:.02s}
+.rate-card:nth-child(2),.cbn-card:nth-child(2),.news-card:nth-child(2),.admin-card:nth-child(2){animation-delay:.06s}
+.rate-card:nth-child(3),.cbn-card:nth-child(3),.news-card:nth-child(3),.admin-card:nth-child(3){animation-delay:.10s}
+.rate-card:nth-child(4),.cbn-card:nth-child(4),.news-card:nth-child(4),.admin-card:nth-child(4){animation-delay:.14s}
+.rate-card:nth-child(5),.cbn-card:nth-child(5),.news-card:nth-child(5),.admin-card:nth-child(5){animation-delay:.18s}
+.rate-card:nth-child(6),.cbn-card:nth-child(6),.news-card:nth-child(6),.admin-card:nth-child(6){animation-delay:.22s}
+.rate-card:nth-child(7),.cbn-card:nth-child(7),.news-card:nth-child(7),.admin-card:nth-child(7){animation-delay:.26s}
+.rate-card:nth-child(8),.cbn-card:nth-child(8),.news-card:nth-child(8),.admin-card:nth-child(8){animation-delay:.30s}
+.rate-card:nth-child(9),.cbn-card:nth-child(9),.news-card:nth-child(9),.admin-card:nth-child(9){animation-delay:.34s}
+.rate-card:nth-child(10),.cbn-card:nth-child(10),.news-card:nth-child(10),.admin-card:nth-child(10){animation-delay:.38s}
+</style>
+</head>
+<body>
+
+<!-- ══ TOPBAR ══ -->
+<div id="topbar">
+  <div class="tb-ham"><span></span><span></span><span></span></div>
+  <div id="tb-title">Aboki Forex</div>
+  <!-- Day/Night toggle pill -->
+  <button id="theme-toggle" onclick="toggleTheme()" title="Toggle Day/Night">
+    <span id="theme-icon-em">☀️</span>
+    <span id="theme-label">DAY</span>
+  </button>
+  <div class="tb-icon" onclick="openPinModal()" title="Admin">🔒</div>
+  <div class="tb-icon" title="More">⋮</div>
+</div>
+
+<!-- ══ TAB BAR (3 tabs) ══ -->
+<div id="tab-bar">
+  <div class="tab-btn active" id="tab-0" onclick="goTab(0)">Parallel Market</div>
+  <div class="tab-btn"        id="tab-1" onclick="goTab(1)">CBN Rates</div>
+  <div class="tab-btn"        id="tab-2" onclick="goTab(2)">Forex News</div>
+</div>
+
+<!-- ══ SLIDING TRACK (3 panels) ══ -->
+<div id="slider-track">
+
+  <!-- SLIDE 0: PARALLEL MARKET -->
+  <div class="slide" id="slide-0">
+    <div class="ts-bar" id="ts-parallel">Updated: —</div>
+    <div class="rate-list" id="list-parallel"></div>
+  </div>
+
+  <!-- SLIDE 1: CBN RATES -->
+  <div class="slide" id="slide-1">
+    <div class="ts-bar" id="ts-cbn">Updated: Apr 24, 2026 1:19 pm</div>
+    <div class="rate-list" id="list-cbn"></div>
+  </div>
+
+  <!-- SLIDE 2: FOREX NEWS -->
+  <div class="slide" id="slide-2">
+    <div class="news-list" id="list-news"></div>
+  </div>
+
+</div>
+
+<!-- ══ FAB ══ -->
+<div id="fab" onclick="openCalc()">🧮</div>
+
+<!-- ══════════════════════════════════
+     ADMIN SCREEN
+══════════════════════════════════ -->
+<div id="admin-screen">
+  <div id="admin-topbar">
+    <div id="admin-back" onclick="closeAdmin()">&#8592;</div>
+    <div id="admin-topbar-title">Admin — Edit Everything</div>
+  </div>
+
+  <div id="admin-tabs">
+    <div class="admin-tab active" id="atab-0" onclick="goAdminTab(0)">Parallel</div>
+    <div class="admin-tab"        id="atab-1" onclick="goAdminTab(1)">CBN Rates</div>
+    <div class="admin-tab"        id="atab-2" onclick="goAdminTab(2)">News</div>
+    <div class="admin-tab"        id="atab-3" onclick="goAdminTab(3)">Settings</div>
+  </div>
+
+  <div class="admin-section active" id="asec-0"><div id="admin-parallel-list"></div></div>
+  <div class="admin-section"        id="asec-1"><div id="admin-cbn-list"></div></div>
+  <div class="admin-section"        id="asec-2"><div id="admin-news-list"></div></div>
+
+  <!-- SETTINGS SECTION -->
+  <div class="admin-section" id="asec-3">
+
+    <!-- Day / Night Toggle -->
+    <div class="theme-card" style="margin-top:4px">
+      <div class="theme-card-icon" id="admin-theme-icon">🌙</div>
+      <div class="theme-card-info">
+        <div class="theme-card-title" id="admin-theme-title">Night Mode</div>
+        <div class="theme-card-sub" id="admin-theme-sub">Currently using dark theme</div>
+      </div>
+      <div class="tog-wrap">
+        <label class="tog">
+          <input type="checkbox" id="theme-chk" onchange="toggleTheme()">
+          <span class="tog-slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Change PIN -->
+    <div class="admin-card">
+      <div class="admin-card-head">
+        <span style="font-size:24px">🔐</span>
+        <span style="font-size:13px;font-weight:700;color:var(--green);text-transform:uppercase">Change Admin PIN</span>
+      </div>
+      <div class="pin-change-inputs">
+        <input type="password" inputmode="numeric" maxlength="4" id="new-pin" placeholder="New PIN (4 digits)">
+        <input type="password" inputmode="numeric" maxlength="4" id="confirm-pin" placeholder="Confirm PIN">
+      </div>
+      <div style="margin-top:10px">
+        <button onclick="changePin()" style="width:100%;background:var(--orange);border:none;border-radius:8px;
+          color:#fff;font-size:14px;font-weight:700;padding:12px;cursor:pointer;font-family:'Roboto',sans-serif">
+          Update PIN
+        </button>
+      </div>
+      <div id="pin-change-msg"></div>
+    </div>
+
+    <!-- Reset Rates -->
+    <div class="admin-card">
+      <div class="admin-card-head">
+        <span style="font-size:24px">🔄</span>
+        <span style="font-size:13px;font-weight:700;color:var(--green);text-transform:uppercase">Reset All Rates</span>
+      </div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5">
+        Resets all parallel and CBN rates to original default values. News will not be affected.
+      </p>
+      <button onclick="resetRates()" style="width:100%;background:#b71c1c;border:none;border-radius:8px;
+        color:#fff;font-size:14px;font-weight:700;padding:12px;cursor:pointer;font-family:'Roboto',sans-serif">
+        ⚠️ Reset to Defaults
+      </button>
+    </div>
+
+  </div><!-- /asec-3 -->
+
+  <div id="admin-save-bar">
+    <button id="admin-save-btn" onclick="saveAll()">💾&nbsp; Save All Changes</button>
+  </div>
+</div>
+
+<!-- ══ PIN MODAL ══ -->
+<div class="overlay" id="pin-overlay">
+  <div class="modal-box">
+    <div class="modal-title">🔐 Admin Login</div>
+    <div class="pin-dots">
+      <div class="pin-dot" id="dot0"></div><div class="pin-dot" id="dot1"></div>
+      <div class="pin-dot" id="dot2"></div><div class="pin-dot" id="dot3"></div>
+    </div>
+    <div id="pin-error"></div>
+    <div class="pin-grid">
+      <button class="pin-key" onclick="pinDigit('1')">1</button>
+      <button class="pin-key" onclick="pinDigit('2')">2</button>
+      <button class="pin-key" onclick="pinDigit('3')">3</button>
+      <button class="pin-key" onclick="pinDigit('4')">4</button>
+      <button class="pin-key" onclick="pinDigit('5')">5</button>
+      <button class="pin-key" onclick="pinDigit('6')">6</button>
+      <button class="pin-key" onclick="pinDigit('7')">7</button>
+      <button class="pin-key" onclick="pinDigit('8')">8</button>
+      <button class="pin-key" onclick="pinDigit('9')">9</button>
+      <button class="pin-key k-blank"></button>
+      <button class="pin-key" onclick="pinDigit('0')">0</button>
+      <button class="pin-key k-del" onclick="pinDelete()">⌫</button>
+    </div>
+    <button class="btn-close" onclick="closePinModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- ══ CALC MODAL ══ -->
+<div class="overlay" id="calc-overlay">
+  <div class="modal-box">
+    <div class="modal-title">🧮 Calculator</div>
+    <div class="calc-screen">
+      <div class="calc-expr" id="calc-expr"></div>
+      <div class="calc-num"  id="calc-num">0</div>
+    </div>
+    <div class="calc-grid">
+      <button class="ck fn" onclick="ck('AC')">AC</button>
+      <button class="ck fn" onclick="ck('+/-')">+/-</button>
+      <button class="ck fn" onclick="ck('%')">%</button>
+      <button class="ck op" onclick="ck('/')">÷</button>
+      <button class="ck"    onclick="ck('7')">7</button>
+      <button class="ck"    onclick="ck('8')">8</button>
+      <button class="ck"    onclick="ck('9')">9</button>
+      <button class="ck op" onclick="ck('*')">×</button>
+      <button class="ck"    onclick="ck('4')">4</button>
+      <button class="ck"    onclick="ck('5')">5</button>
+      <button class="ck"    onclick="ck('6')">6</button>
+      <button class="ck op" onclick="ck('-')">−</button>
+      <button class="ck"    onclick="ck('1')">1</button>
+      <button class="ck"    onclick="ck('2')">2</button>
+      <button class="ck"    onclick="ck('3')">3</button>
+      <button class="ck op" onclick="ck('+')">+</button>
+      <button class="ck w2" onclick="ck('0')">0</button>
+      <button class="ck"    onclick="ck('.')">.</button>
+      <button class="ck eq" onclick="ck('=')">=</button>
+    </div>
+    <button class="btn-close" onclick="closeCalc()">Close</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+'use strict';
+
+/* ══════════════════════════════════════════
+   DEFAULT DATA
+══════════════════════════════════════════ */
+const DEF_PARALLEL = [
+  {name:'DOLLAR (USD)', flag:'🇺🇸', buy:1390,  sell:1398},
+  {name:'POUND (GBP)',  flag:'🇬🇧', buy:1865,  sell:1880},
+  {name:'EURO (EUR)',   flag:'🇪🇺', buy:1600,  sell:1620},
+  {name:'DOLLAR (CAD)',flag:'🇨🇦', buy:1000,  sell:1100},
+  {name:'RAND (ZAR)',   flag:'🇿🇦', buy:75,    sell:90},
+  {name:'DIRHAM (AED)',flag:'🇦🇪', buy:350,   sell:370},
+  {name:'YUAN (CNY)',   flag:'🇨🇳', buy:180,   sell:200},
+  {name:'RIYAL (SAR)',  flag:'🇸🇦', buy:368,   sell:375},
+];
+const DEF_CBN = [
+  {name:'DOLLAR (USD)',                          flag:'🇺🇸', rate:1379.46},
+  {name:'POUND (GBP)',                           flag:'🇬🇧', rate:1861.58},
+  {name:'EURO (EUR)',                            flag:'🇪🇺', rate:1612.87},
+  {name:'SWISS FRANC (CHF)',                     flag:'🇨🇭', rate:1743.72},
+  {name:'JAPANESE YEN (JPN)',                   flag:'🇯🇵', rate:8.62},
+  {name:'CFA FRANC (XOF)',                      flag:'🏳️',  rate:2.41},
+  {name:'WEST AFRICAN UNIT OF ACCOUNT (WAUA)',  flag:'🌍',  rate:1852.68},
+  {name:'CHINESE YUAN (CNY)',                   flag:'🇨🇳', rate:201.82},
+  {name:'SAUDI RIYAL (SAR)',                    flag:'🇸🇦', rate:367.80},
+  {name:'SOUTH AFRICAN RAND (ZAR)',             flag:'🇿🇦', rate:82.68},
+];
+const DEF_NEWS = [
+  {title:'Petrol Price Drops 15.6% Year on Year in February 2026, NBS Says',                               ago:'1 hour ago'},
+  {title:'Trump Orders Extended Naval Blockade of Strait of Hormuz as Iran War Enters Third Month',         ago:'2 hours ago'},
+  {title:'US Gas Prices Hit $4.23 as Hormuz Blockade Bites, Brent Crude Surges to $114.60',                ago:'3 hours ago'},
+  {title:'IFC, StanChart Launch $300 Million Facility to Boost African Supply Chains',                     ago:'4 hours ago'},
+  {title:'Crude Premiums Drop from War Highs as Refiners Cut Runs, Tap Reserves',                          ago:'5 hours ago'},
+  {title:"Oil Hits $115 as Strait of Hormuz Fears and UAE's OPEC Exit Shake Markets",                     ago:'6 hours ago'},
+  {title:'CBN Holds Rate at 27.5% Amid Global Uncertainty, Focus Shifts to Naira Stability',               ago:'7 hours ago'},
+  {title:"Nigeria's Forex Reserves Rise to $38.2bn as Oil Revenue Recovers",                               ago:'8 hours ago'},
+];
+
+/* ══════════════════════════════════════════
+   STATE
+══════════════════════════════════════════ */
+const SK = 'aboki_v6';
+let parallelRates = [];
+let cbnRates = [];
+let newsItems = [];
+let adminPin = '1234';
+let isDayMode = false;
+let currentTab = 0;
+
+/* ══════════════════════════════════════════
+   STORAGE
+══════════════════════════════════════════ */
+function loadAll() {
+  try {
+    const raw = localStorage.getItem(SK);
+    if (raw) {
+      const d = JSON.parse(raw);
+      parallelRates = d.parallel || DEF_PARALLEL.map(r=>({...r}));
+      cbnRates      = d.cbn      || DEF_CBN.map(r=>({...r}));
+      newsItems     = d.news     || DEF_NEWS.map(n=>({...n}));
+      adminPin      = d.pin      || '1234';
+      isDayMode     = d.day      || false;
+    } else {
+      resetToDefaults(false);
+    }
+  } catch(e) { resetToDefaults(false); }
+}
+
+function resetToDefaults(save) {
+  parallelRates = DEF_PARALLEL.map(r=>({...r}));
+  cbnRates      = DEF_CBN.map(r=>({...r}));
+  newsItems     = DEF_NEWS.map(n=>({...n}));
+  if (save) saveToStorage();
+}
+
+function saveToStorage() {
+  try {
+    localStorage.setItem(SK, JSON.stringify({
+      parallel:parallelRates, cbn:cbnRates, news:newsItems, pin:adminPin, day:isDayMode
+    }));
+  } catch(e) {}
+}
+
+/* ══════════════════════════════════════════
+   HELPERS
+══════════════════════════════════════════ */
+function fmt(n) {
+  const v = Number(n);
+  if (isNaN(v)) return '₦—';
+  return '₦' + v.toLocaleString('en-NG',{minimumFractionDigits:0,maximumFractionDigits:2});
+}
+function nowStr() {
+  const d = new Date();
+  return 'Updated: ' +
+    d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) + ' ' +
+    d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true}).toLowerCase();
+}
+
+/* ══════════════════════════════════════════
+   DAY / NIGHT THEME
+══════════════════════════════════════════ */
+function applyTheme() {
+  document.body.classList.toggle('day', isDayMode);
+
+  // Topbar pill
+  const icon  = document.getElementById('theme-icon-em');
+  const label = document.getElementById('theme-label');
+  if (isDayMode) {
+    icon.textContent  = '🌙';
+    label.textContent = 'NIGHT';
+  } else {
+    icon.textContent  = '☀️';
+    label.textContent = 'DAY';
+  }
+
+  // Admin settings card sync
+  const chk = document.getElementById('theme-chk');
+  if (chk) chk.checked = isDayMode;
+  const aIcon  = document.getElementById('admin-theme-icon');
+  const aTitle = document.getElementById('admin-theme-title');
+  const aSub   = document.getElementById('admin-theme-sub');
+  if (aIcon) {
+    aIcon.textContent  = isDayMode ? '☀️' : '🌙';
+    aTitle.textContent = isDayMode ? 'Day Mode' : 'Night Mode';
+    aSub.textContent   = isDayMode ? 'Currently using light theme' : 'Currently using dark theme';
+  }
+}
+
+function toggleTheme() {
+  isDayMode = !isDayMode;
+  applyTheme();
+  saveToStorage();
+}
+
+/* ══════════════════════════════════════════
+   TAB SLIDING
+══════════════════════════════════════════ */
+const N_TABS = 3;
+
+function goTab(idx) {
+  currentTab = idx;
+  document.getElementById('slider-track').style.transform =
+    'translateX(-' + (idx * (100/N_TABS)) + '%)';
+  for (let i = 0; i < N_TABS; i++)
+    document.getElementById('tab-' + i).classList.toggle('active', i === idx);
+  document.getElementById('tab-' + idx)
+    .scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+}
+
+/* Swipe support */
+(function(){
+  let sx=0, sy=0;
+  const track = document.getElementById('slider-track');
+  track.addEventListener('touchstart', e=>{sx=e.touches[0].clientX; sy=e.touches[0].clientY;},{passive:true});
+  track.addEventListener('touchend', e=>{
+    const dx = e.changedTouches[0].clientX - sx;
+    const dy = e.changedTouches[0].clientY - sy;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
+      if (dx < 0 && currentTab < N_TABS-1) goTab(currentTab+1);
+      else if (dx > 0 && currentTab > 0)   goTab(currentTab-1);
+    }
+  },{passive:true});
+})();
+
+/* ══════════════════════════════════════════
+   RENDER PARALLEL
+══════════════════════════════════════════ */
+function renderParallel() {
+  document.getElementById('ts-parallel').textContent = nowStr();
+  const c = document.getElementById('list-parallel');
+  c.innerHTML = '';
+  parallelRates.forEach(r => {
+    const el = document.createElement('div');
+    el.className = 'rate-card';
+    el.innerHTML =
+      '<div class="rc-left">' +
+        '<div class="rc-flag">'+r.flag+'</div>' +
+        '<div class="rc-name">'+r.name+'</div>' +
+      '</div>' +
+      '<div class="rc-divider"></div>' +
+      '<div class="rc-right">' +
+        '<div class="rc-row"><span class="rc-label">BUY</span><span class="rc-sep"></span><span class="rc-val buy">'+fmt(r.buy)+'</span></div>' +
+        '<div class="rc-row"><span class="rc-label">SELL</span><span class="rc-sep"></span><span class="rc-val sell">'+fmt(r.sell)+'</span></div>' +
+      '</div>';
+    c.appendChild(el);
+  });
+}
+
+/* ══════════════════════════════════════════
+   RENDER CBN
+══════════════════════════════════════════ */
+function renderCBN() {
+  const c = document.getElementById('list-cbn');
+  c.innerHTML = '';
+  cbnRates.forEach(r => {
+    const el = document.createElement('div');
+    el.className = 'cbn-card';
+    el.innerHTML =
+      '<div class="cbn-flag">'+r.flag+'</div>' +
+      '<div class="cbn-name">'+r.name+'</div>' +
+      '<div class="cbn-rate">'+fmt(r.rate)+'</div>';
+    c.appendChild(el);
+  });
+}
+
+/* ══════════════════════════════════════════
+   RENDER NEWS
+══════════════════════════════════════════ */
+function renderNews() {
+  const c = document.getElementById('list-news');
+  c.innerHTML = '';
+  newsItems.forEach(n => {
+    const el = document.createElement('div');
+    el.className = 'news-card';
+    el.innerHTML =
+      '<div class="news-title">'+n.title+'</div>' +
+      '<div class="news-meta">' +
+        '<span class="news-source">ABOKI FOREX</span>' +
+        '<span class="news-ago">'+n.ago+'</span>' +
+      '</div>';
+    c.appendChild(el);
+  });
+}
+
+/* ══════════════════════════════════════════
+   PIN MODAL
+══════════════════════════════════════════ */
+let pinBuf = '';
+
+function openPinModal() {
+  pinBuf = ''; refreshDots();
+  document.getElementById('pin-error').textContent = '';
+  document.getElementById('pin-overlay').classList.add('open');
+}
+function closePinModal() {
+  pinBuf = '';
+  document.getElementById('pin-overlay').classList.remove('open');
+}
+function refreshDots() {
+  for (let i=0;i<4;i++) document.getElementById('dot'+i).classList.toggle('filled', i<pinBuf.length);
+}
+function pinDigit(d) {
+  if (pinBuf.length >= 4) return;
+  pinBuf += d; refreshDots();
+  document.getElementById('pin-error').textContent = '';
+  if (pinBuf.length === 4) {
+    setTimeout(()=>{
+      if (pinBuf === adminPin) { closePinModal(); openAdmin(); }
+      else {
+        document.getElementById('pin-error').textContent = 'Incorrect PIN. Try again.';
+        pinBuf=''; refreshDots();
+      }
+    }, 150);
+  }
+}
+function pinDelete() {
+  if (!pinBuf.length) return;
+  pinBuf = pinBuf.slice(0,-1); refreshDots();
+  document.getElementById('pin-error').textContent = '';
+}
+
+/* ══════════════════════════════════════════
+   ADMIN
+══════════════════════════════════════════ */
+let curAdminTab = 0;
+
+function goAdminTab(idx) {
+  curAdminTab = idx;
+  for (let i=0;i<4;i++) {
+    document.getElementById('atab-'+i).classList.toggle('active', i===idx);
+    document.getElementById('asec-'+i).classList.toggle('active', i===idx);
+    document.getElementById('asec-'+i).style.display = (i===idx) ? 'block' : 'none';
+  }
+}
+
+function openAdmin() {
+  document.getElementById('fab').classList.add('hidden');
+  buildAdminParallel();
+  buildAdminCBN();
+  buildAdminNews();
+  // sync theme checkbox
+  const chk = document.getElementById('theme-chk');
+  if (chk) chk.checked = isDayMode;
+  applyTheme(); // refresh admin theme labels
+  goAdminTab(0);
+  document.getElementById('admin-screen').classList.add('open');
+}
+function closeAdmin() {
+  document.getElementById('admin-screen').classList.remove('open');
+  document.getElementById('fab').classList.remove('hidden');
+}
+
+/* Build parallel admin */
+function buildAdminParallel() {
+  const c = document.getElementById('admin-parallel-list'); c.innerHTML='';
+  parallelRates.forEach((r,i) => {
+    const card = document.createElement('div'); card.className='admin-card';
+    card.innerHTML =
+      '<div class="admin-card-head">' +
+        '<input class="admin-flag-in" id="ap-flag-'+i+'" value="'+r.flag+'">' +
+        '<input class="admin-name-in" id="ap-name-'+i+'" value="'+r.name+'">' +
+      '</div>' +
+      '<div class="admin-inputs">' +
+        '<div class="inp-group"><label class="lbl-buy">BUY (₦)</label>' +
+          '<input type="number" inputmode="decimal" id="ap-buy-'+i+'" value="'+r.buy+'"></div>' +
+        '<div class="inp-group"><label class="lbl-sell">SELL (₦)</label>' +
+          '<input class="sell-in" type="number" inputmode="decimal" id="ap-sell-'+i+'" value="'+r.sell+'"></div>' +
+      '</div>';
+    c.appendChild(card);
+  });
+}
+
+/* Build CBN admin */
+function buildAdminCBN() {
+  const c = document.getElementById('admin-cbn-list'); c.innerHTML='';
+  cbnRates.forEach((r,i) => {
+    const card = document.createElement('div'); card.className='admin-card';
+    card.innerHTML =
+      '<div class="admin-card-head">' +
+        '<input class="admin-flag-in" id="ac-flag-'+i+'" value="'+r.flag+'">' +
+        '<input class="admin-name-in" id="ac-name-'+i+'" value="'+r.name+'">' +
+      '</div>' +
+      '<div class="admin-inputs">' +
+        '<div class="inp-group inp-full"><label class="lbl-cbn">CBN RATE (₦)</label>' +
+          '<input type="number" inputmode="decimal" id="ac-rate-'+i+'" value="'+r.rate+'"></div>' +
+      '</div>';
+    c.appendChild(card);
+  });
+}
+
+/* Build news admin */
+function buildAdminNews() {
+  const c = document.getElementById('admin-news-list'); c.innerHTML='';
+  newsItems.forEach((n,i) => {
+    const card = document.createElement('div'); card.className='admin-card';
+    card.innerHTML =
+      '<div class="admin-inputs">' +
+        '<div class="inp-group inp-full"><label class="lbl-buy">Headline '+(i+1)+'</label>' +
+          '<textarea id="an-title-'+i+'">'+n.title+'</textarea></div>' +
+        '<div class="inp-group inp-full"><label class="lbl-sell">Time Ago</label>' +
+          '<input type="text" id="an-ago-'+i+'" value="'+n.ago+'"></div>' +
+      '</div>';
+    c.appendChild(card);
+  });
+}
+
+/* ══════════════════════════════════════════
+   SAVE ALL
+══════════════════════════════════════════ */
+function saveAll() {
+  let ok = true;
+
+  parallelRates.forEach((r,i) => {
+    const fi = document.getElementById('ap-flag-'+i);
+    const ni = document.getElementById('ap-name-'+i);
+    const bi = document.getElementById('ap-buy-'+i);
+    const si = document.getElementById('ap-sell-'+i);
+    if(fi) r.flag = fi.value.trim();
+    if(ni) r.name = ni.value.trim();
+    const b=parseFloat(bi?.value), s=parseFloat(si?.value);
+    if(!isNaN(b)&&b>=0) r.buy=b; else { if(bi) bi.style.borderColor='#ef5350'; ok=false; }
+    if(!isNaN(s)&&s>=0) r.sell=s; else { if(si) si.style.borderColor='#ef5350'; ok=false; }
+  });
+
+  cbnRates.forEach((r,i) => {
+    const fi = document.getElementById('ac-flag-'+i);
+    const ni = document.getElementById('ac-name-'+i);
+    const ri = document.getElementById('ac-rate-'+i);
+    if(fi) r.flag = fi.value.trim();
+    if(ni) r.name = ni.value.trim();
+    const rt=parseFloat(ri?.value);
+    if(!isNaN(rt)&&rt>=0) r.rate=rt; else { if(ri) ri.style.borderColor='#ef5350'; ok=false; }
+  });
+
+  newsItems.forEach((n,i) => {
+    const ti = document.getElementById('an-title-'+i);
+    const ai = document.getElementById('an-ago-'+i);
+    if(ti) n.title = ti.value.trim();
+    if(ai) n.ago   = ai.value.trim();
+  });
+
+  if (!ok) { showToast('⚠️ Fix highlighted fields first'); return; }
+
+  saveToStorage();
+  renderParallel();
+  renderCBN();
+  renderNews();
+  closeAdmin();
+  showToast('✅ All changes saved!');
+}
+
+/* ══════════════════════════════════════════
+   CHANGE PIN
+══════════════════════════════════════════ */
+function changePin() {
+  const np  = document.getElementById('new-pin').value.trim();
+  const cp  = document.getElementById('confirm-pin').value.trim();
+  const msg = document.getElementById('pin-change-msg');
+  if (!/^\d{4}$/.test(np)) {
+    msg.style.color='#ef5350'; msg.textContent='PIN must be exactly 4 digits.'; return;
+  }
+  if (np !== cp) {
+    msg.style.color='#ef5350'; msg.textContent='PINs do not match.'; return;
+  }
+  adminPin = np;
+  saveToStorage();
+  msg.style.color='#4CAF50'; msg.textContent='✅ PIN updated!';
+  document.getElementById('new-pin').value='';
+  document.getElementById('confirm-pin').value='';
+}
+
+/* ══════════════════════════════════════════
+   RESET RATES
+══════════════════════════════════════════ */
+function resetRates() {
+  if (!confirm('Reset all parallel and CBN rates to original defaults?')) return;
+  resetToDefaults(true);
+  buildAdminParallel();
+  buildAdminCBN();
+  renderParallel();
+  renderCBN();
+  showToast('✅ Rates reset to defaults');
+}
+
+/* ══════════════════════════════════════════
+   CALCULATOR
+══════════════════════════════════════════ */
+const C={expr:'',num:'0',op:null,prev:null,fresh:true};
+function openCalc(){document.getElementById('calc-overlay').classList.add('open')}
+function closeCalc(){document.getElementById('calc-overlay').classList.remove('open')}
+function updCalc(){
+  document.getElementById('calc-expr').textContent=C.expr;
+  document.getElementById('calc-num').textContent=C.num;
+}
+function ck(k){
+  if(k==='AC'){C.expr='';C.num='0';C.op=null;C.prev=null;C.fresh=true}
+  else if(k==='+/-'){const n=parseFloat(C.num);if(!isNaN(n))C.num=String(-n)}
+  else if(k==='%'){const n=parseFloat(C.num);if(!isNaN(n))C.num=String(n/100)}
+  else if(['+','-','*','/'].includes(k)){
+    const sym={'+':'+','-':'−','*':'×','/':'÷'}[k];
+    if(C.op&&!C.fresh){C.num=cr(C.prev,C.op,parseFloat(C.num))}
+    C.prev=parseFloat(C.num);C.op=k;C.expr=C.num+' '+sym;C.fresh=true;
+  }
+  else if(k==='='){
+    if(C.op!==null&&C.prev!==null){
+      C.num=cr(C.prev,C.op,parseFloat(C.num));
+      C.expr='';C.op=null;C.prev=null;C.fresh=true;
+    }
+  }
+  else if(k==='.'){if(C.fresh){C.num='0.';C.fresh=false}else if(!C.num.includes('.'))C.num+='.'}
+  else{if(C.fresh||C.num==='0'){C.num=k;C.fresh=false}else if(C.num.length<15)C.num+=k}
+  updCalc();
+}
+function cr(a,op,b){
+  let r;
+  if(op==='+')r=a+b;else if(op==='-')r=a-b;else if(op==='*')r=a*b;else r=b===0?NaN:a/b;
+  return (isNaN(r)||!isFinite(r))?'Error':String(parseFloat(r.toFixed(10)));
+}
+
+/* ══════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════ */
+let toastTmr=null;
+function showToast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('show');
+  if(toastTmr)clearTimeout(toastTmr);
+  toastTmr=setTimeout(()=>el.classList.remove('show'),2600);
+}
+
+/* ══════════════════════════════════════════
+   INIT
+══════════════════════════════════════════ */
+loadAll();
+applyTheme();
+renderParallel();
+renderCBN();
+renderNews();
+</script>
+</body>
+</html>
